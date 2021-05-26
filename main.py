@@ -1,7 +1,8 @@
 ''' Main file for app ''' 
 import json
 import sys 
-
+import pandas as pd
+import numpy as np
 from PyQt5 import QtWidgets, QtCore
 
 import design
@@ -42,8 +43,10 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.setupUi(self) # design init
 
         # Vars
-        self.x_values = []
-        self.y_values = []
+        self.x_dot_values = []
+        self.y_dot_values = []
+        self.x_poly_values = []
+        self.y_poly_values = []
 
         # Insert powerlist 
         for power in range(2,9):
@@ -103,15 +106,21 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
             json_dict = json.loads(data_file.read())
             data = json_dict['data']
             
-            self.x_values = data['x_values']
-            self.y_values = data['y_values']
+            self.x_dot_values = data['x_values'] 
+            self.y_dot_values = data['y_values']
             self.draw_graph()
             
 
         
 
     def open_excell(self, path):
-        print(path)
+        
+        excell_file = pd.ExcelFile(path)
+        print(excell_file.sheet_names)
+        df1 = excell_file.parse('Bla')
+        self.x_dot_values = df1['x_values']
+        self.y_dot_values = df1['y_values']
+        self.draw_graph()
 
         
     def save_file(self):
@@ -141,12 +150,20 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
         
         self.canvas.axes.clear()
         self.canvas.axes.grid()
-        self.canvas.axes.plot(self.x_values, self.y_values, color = 'red')
+        self.canvas.axes.scatter(
+            self.x_dot_values, 
+            self.y_dot_values, 
+            color = 'red'
+            )
         self.canvas.draw()
         if self.Display_formula_checkbox.isChecked():
-            print("True")
-        else:
-            print("False")
+            self.get_formula()
+        
+
+    
+    def get_formula(self):
+        None
+        
         
 
 def main():
