@@ -63,19 +63,54 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def open_file(self):
         ''' Open file for analysis ''' 
-        None
-    
+        
+        self.Text_box.clear()
+
+        file_information_list = QtWidgets.QFileDialog.getOpenFileName(
+            self,
+            'Выберите файл с данными',
+            # Base Dir
+            '',
+            '*.json *.xls *.xlsx'
+        )
+
+        # 0 index because of getOpenFileName method return 
+        # path + file types '*.json *.xls *.xlsx' as list
+        file_path = file_information_list[0]
+
+        
+        file_type = file_path.split(sep = '.')
+        file_type = file_type[1]
+
+        if file_type == 'json':
+            self.open_json(file_path)
+
+        else:
+            self.open_excell(file_path)
+        
+    def open_json(self, path):
+        print(path)
+
+    def open_excell(self, path):
+        print(path)
+
+        
+
+
     def save_file(self):
         ''' Save file as JSON ''' 
         None
-    
+
+
     def choose_power(self, item):
 
         print('clicked', item)
 
+
     def display_all(self):
         
         print('hey', self.Display_all_checkbox.isChecked())
+
 
     def display_formula(self):
 
