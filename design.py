@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'design.ui'
+# Form implementation generated from reading ui file 'design2.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -22,19 +22,20 @@ class Ui_MainWindow(object):
         self.widget = QtWidgets.QWidget(self.centralwidget)
         self.widget.setObjectName("widget")
         self.verticalLayout_3.addWidget(self.widget)
-        self.text_box = QtWidgets.QListWidget(self.centralwidget)
-        self.text_box.setMaximumSize(QtCore.QSize(16777215, 50))
-        self.text_box.setObjectName("text_box")
-        self.verticalLayout_3.addWidget(self.text_box)
-        self.display_all_checkbox = QtWidgets.QCheckBox(self.centralwidget)
-        self.display_all_checkbox.setObjectName("display_all_checkbox")
-        self.verticalLayout_3.addWidget(self.display_all_checkbox)
-        self.display_formula_checkbox = QtWidgets.QCheckBox(self.centralwidget)
-        self.display_formula_checkbox.setObjectName("display_formula_checkbox")
-        self.verticalLayout_3.addWidget(self.display_formula_checkbox)
+        self.Text_box = QtWidgets.QListWidget(self.centralwidget)
+        self.Text_box.setMaximumSize(QtCore.QSize(16777215, 50))
+        self.Text_box.setObjectName("Text_box")
+        self.verticalLayout_3.addWidget(self.Text_box)
+        self.Display_all_checkbox = QtWidgets.QCheckBox(self.centralwidget)
+        self.Display_all_checkbox.setObjectName("Display_all_checkbox")
+        self.verticalLayout_3.addWidget(self.Display_all_checkbox)
+        self.Display_formula_checkbox = QtWidgets.QCheckBox(self.centralwidget)
+        self.Display_formula_checkbox.setObjectName("Display_formula_checkbox")
+        self.verticalLayout_3.addWidget(self.Display_formula_checkbox)
         self.Choose_power = QtWidgets.QComboBox(self.centralwidget)
-        self.Choose_power.setEnabled(False)
-        self.Choose_power.setEditable(True)
+        self.Choose_power.setEnabled(True)
+        self.Choose_power.setEditable(False)
+        self.Choose_power.setCurrentText("")
         self.Choose_power.setInsertPolicy(QtWidgets.QComboBox.InsertAtBottom)
         self.Choose_power.setObjectName("Choose_power")
         self.verticalLayout_3.addWidget(self.Choose_power)
@@ -53,8 +54,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.display_all_checkbox.setText(_translate("MainWindow", "Отобразить графики всех степеней полинома"))
-        self.display_formula_checkbox.setText(_translate("MainWindow", "Отобразить формулу полинома"))
-        self.Choose_power.setCurrentText(_translate("MainWindow", "Выберите степень полинома"))
+        self.Display_all_checkbox.setText(_translate("MainWindow", "Отобразить графики всех степеней полинома"))
+        self.Display_formula_checkbox.setText(_translate("MainWindow", "Отобразить формулу полинома"))
         self.Open_button.setText(_translate("MainWindow", "Выбрать файл с входными данными"))
         self.Save_button.setText(_translate("MainWindow", "Сохранить результаты"))

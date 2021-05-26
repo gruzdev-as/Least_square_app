@@ -35,6 +35,12 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
         super().__init__()
         self.setupUi(self) # design init
 
+        # Insert powerlist 
+        for power in range(2,9):
+            self.Choose_power.insertItem(
+                0, '{}'.format(power), '{}'.format(power)
+                )
+        
         # Canvas setting 
 
         self.canvas = MplCanvase()
@@ -46,9 +52,13 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.canvas.axes.grid()
 
 
+
         #Events
         self.Open_button.clicked.connect(self.open_file)
         self.Save_button.clicked.connect(self.save_file)
+        self.Choose_power.textActivated.connect(self.choose_power)
+        self.Display_all_checkbox.stateChanged.connect(self.display_all)
+        self.Display_formula_checkbox.stateChanged.connect(self.display_formula)
 
 
     def open_file(self):
@@ -58,6 +68,19 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def save_file(self):
         ''' Save file as JSON ''' 
         None
+    
+    def choose_power(self, item):
+
+        print('clicked', item)
+
+    def display_all(self):
+        
+        print('hey', self.Display_all_checkbox.isChecked())
+
+    def display_formula(self):
+
+        print('hey', self.Display_formula_checkbox.isChecked())
+
 
 
 def main():

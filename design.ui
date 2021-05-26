@@ -47,11 +47,14 @@
       <property name="enabled">
        <bool>false</bool>
       </property>
+      <property name="tabletTracking">
+       <bool>false</bool>
+      </property>
       <property name="editable">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="currentText">
-       <string>Выберите степень полинома</string>
+       <string/>
       </property>
       <property name="currentIndex">
        <number>-1</number>
