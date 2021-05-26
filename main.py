@@ -1,5 +1,5 @@
 ''' Main file for app ''' 
-
+import json
 import sys 
 
 from PyQt5 import QtWidgets, QtCore
@@ -35,6 +35,11 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
         super().__init__()
         self.setupUi(self) # design init
 
+        # Vars
+
+        self.x_values = []
+        self.y_values = []
+
         # Insert powerlist 
         for power in range(2,9):
             self.Choose_power.insertItem(
@@ -50,7 +55,6 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.canvas_lay.addWidget(self.toolbar) # Add toolbar to Widget
         self.canvas.axes.clear()
         self.canvas.axes.grid()
-
 
 
         #Events
@@ -89,7 +93,17 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.open_excell(file_path)
         
     def open_json(self, path):
-        print(path)
+        
+        with open(path, 'r') as data_file:
+                
+            json_dict = json.loads(data_file.read())
+            data = json_dict['data']
+            
+            self.x_values = data['x_values']
+            self.y_values = data['y_values']
+            
+
+        
 
     def open_excell(self, path):
         print(path)
