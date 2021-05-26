@@ -24,6 +24,12 @@ class MplCanvase(FigureCanvas):
 
         fig = Figure()
         self.axes = fig.add_subplot()
+        fig.subplots_adjust(
+            left = 0.08,
+            right = 0.98, # 1 - 0.98 = 0.2
+            top = 0.95, # 1 - 0.95 = 0.5
+            bottom = 0.1
+            )
 
         super().__init__(fig)
         
@@ -36,7 +42,6 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.setupUi(self) # design init
 
         # Vars
-
         self.x_values = []
         self.y_values = []
 
@@ -47,7 +52,6 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 )
         
         # Canvas setting 
-
         self.canvas = MplCanvase()
         self.canvas_lay = QtWidgets.QVBoxLayout(self.widget)
         self.toolbar = NavigationToolbar(self.canvas, self.widget)
@@ -101,6 +105,7 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
             
             self.x_values = data['x_values']
             self.y_values = data['y_values']
+            self.draw_graph()
             
 
         
@@ -109,8 +114,6 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
         print(path)
 
         
-
-
     def save_file(self):
         ''' Save file as JSON ''' 
         None
@@ -129,8 +132,22 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def display_formula(self):
 
         print('hey', self.Display_formula_checkbox.isChecked())
+        
+        if self.x_values != []:
+            self.draw_graph()
 
 
+    def draw_graph(self):
+        
+        self.canvas.axes.clear()
+        self.canvas.axes.grid()
+        self.canvas.axes.plot(self.x_values, self.y_values, color = 'red')
+        self.canvas.draw()
+        if self.Display_formula_checkbox.isChecked():
+            print("True")
+        else:
+            print("False")
+        
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
