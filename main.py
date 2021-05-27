@@ -48,6 +48,8 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.x_poly_values = []
         self.y_poly_values = []
 
+        self.power = 2
+
         # Insert powerlist 
         for power in range(2,9):
             self.Choose_power.insertItem(
@@ -130,7 +132,9 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def choose_power(self, item):
 
-        print('clicked', item)
+        self.power = int(item)
+        if self.x_dot_values != []:
+            self.draw_graph()
 
 
     def display_all(self):
@@ -155,12 +159,34 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.y_dot_values, 
             color = 'red'
             )
-        self.canvas.draw()
+        
+        
         if self.Display_formula_checkbox.isChecked():
             self.get_formula()
         
+        z = np.polyfit(
+            self.x_dot_values,
+            self.y_dot_values,
+            self.power
+        )
+        
+        p = np.poly1d(z)
+        
+        self.x_poly_values = np.linspace(
+            self.x_dot_values.values[0],
+            self.x_dot_values.values[-1],
+            num = 50
+        )
+        self.y_poly_values = p(self.x_poly_values)
 
-    
+        self.canvas.axes.plot(
+            self.x_poly_values,
+            self.y_poly_values,
+        )
+
+        self.canvas.draw()
+
+
     def get_formula(self):
         None
         
