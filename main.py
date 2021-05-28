@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from PyQt5 import QtWidgets, QtCore
 
-import design
+import design_with_table
 
 
 import matplotlib
@@ -35,7 +35,7 @@ class MplCanvase(FigureCanvas):
         super().__init__(fig)
         
 
-class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
+class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
 
     def __init__(self):
         ''' Init a file for acess to vars and methods in design.py'''
@@ -49,12 +49,12 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.y_poly_values = []
 
         self.power = 2
-
-        # Insert powerlist 
-        for power in range(2,9):
-            self.Choose_power.insertItem(
-                0, '{}'.format(power), '{}'.format(power)
+        
+        for row in range (0, 8):
+            self.PowerTable.setItem(row, 0, 
+                QtWidgets.QTableWidgetItem('{} степень полинома' .format(row+2))
                 )
+
         
         # Canvas setting 
         self.canvas = MplCanvase()
@@ -65,14 +65,17 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.canvas.axes.clear()
         self.canvas.axes.grid()
 
-
+    
         #Events
         self.Open_button.clicked.connect(self.open_file)
         self.Save_button.clicked.connect(self.save_file)
-        self.Choose_power.textActivated.connect(self.choose_power)
-        self.Display_all_checkbox.stateChanged.connect(self.display_all)
+        self.PowerTable.cellClicked.connect(self.testTable)
         self.Display_formula_checkbox.stateChanged.connect(self.display_formula)
 
+
+    def testTable(self, item):
+        print('hey', type(item), str(item))
+        
 
     def open_file(self):
         ''' Open file for analysis ''' 
@@ -133,7 +136,8 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def choose_power(self, item):
 
         self.power = int(item)
-        if self.x_dot_values != []:
+        print(int(item))
+        if len(self.x_dot_values) != 0:
             self.draw_graph()
 
 
