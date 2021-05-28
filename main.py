@@ -129,6 +129,10 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
         self.x_dot_values = df1['x_values']
         self.y_dot_values = df1['y_values']
         self.draw_graph()
+        self.PowerTable.setEnabled(True)
+        self.Display_formula_checkbox.setEnabled(True)
+        self.Save_button.setEnabled(True)
+        
 
         
     def save_file(self):
