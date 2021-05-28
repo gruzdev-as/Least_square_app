@@ -73,8 +73,12 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
         self.Display_formula_checkbox.stateChanged.connect(self.display_formula)
 
 
-    def testTable(self, item):
-        print('hey', type(item), str(item))
+    def testTable(self):
+        #print('hey', type(item), str(item))
+        items = []
+        for item in self.PowerTable.selectedItems():
+            items.append(item.row())
+            print (items)
         
 
     def open_file(self):
