@@ -80,6 +80,8 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
             items.append(item.row())
             print (items)
         
+        self.draw_graph(items)
+        
 
     def open_file(self):
         ''' Open file for analysis ''' 
@@ -119,9 +121,6 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
             self.y_dot_values = data['y_values']
             self.draw_graph()
             
-
-        
-
     def open_excell(self, path):
         
         excell_file = pd.ExcelFile(path)
@@ -158,7 +157,7 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
             self.draw_graph()
 
 
-    def draw_graph(self):
+    def draw_graph(self, items = None):
         
         self.canvas.axes.clear()
         self.canvas.axes.grid()
@@ -167,30 +166,37 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
             self.y_dot_values, 
             color = 'red'
             )
-        
+    
         
         if self.Display_formula_checkbox.isChecked():
             self.get_formula()
         
-        z = np.polyfit(
-            self.x_dot_values,
-            self.y_dot_values,
-            self.power
-        )
         
-        p = np.poly1d(z)
-        
-        self.x_poly_values = np.linspace(
-            self.x_dot_values.values[0],
-            self.x_dot_values.values[-1],
-            num = 50
-        )
-        self.y_poly_values = p(self.x_poly_values)
+        if items:
+            print(items)
+            print(type(items))
+            for item in items:
+                self.power = item + 2
+                
+                z = np.polyfit(
+                    self.x_dot_values,
+                    self.y_dot_values,
+                    self.power
+                )
+                
+                p = np.poly1d(z)
+                
+                self.x_poly_values = np.linspace(
+                    self.x_dot_values.values[0],
+                    self.x_dot_values.values[-1],
+                    num = 50
+                )
+                self.y_poly_values = p(self.x_poly_values)
 
-        self.canvas.axes.plot(
-            self.x_poly_values,
-            self.y_poly_values,
-        )
+                self.canvas.axes.plot(
+                    self.x_poly_values,
+                    self.y_poly_values,
+                )
 
         self.canvas.draw()
 
