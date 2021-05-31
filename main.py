@@ -134,7 +134,7 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
     def open_excell(self, path):
         
         excell_file = pd.ExcelFile(path)
-        data_frame_1 = excell_file.parse('Sheet1')
+        data_frame_1 = excell_file.parse('dots')
         self.x_dot_values = data_frame_1['x_dot_values']
         self.y_dot_values = data_frame_1['y_dot_values']
         self.draw_graph()
@@ -175,10 +175,10 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
         file_path = str(path[0]) + '.json'
         with open(file_path, 'w') as json_file:
             json.dump(json_input, json_file, indent = 4)
-        self.save_excell()
+        self.save_excell(str(path[0]))
 
         
-    def save_excell(self):
+    def save_excell(self, path):
         
         sheetlist = {}
 
@@ -204,7 +204,7 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
             sheetlist['poly {}' .format(self.powers[iteration])] = excell_poly_df
 
         writer = pd.ExcelWriter(
-            './data/file.xlsx',
+            path + '.xlsx',
         )
         for sheet in sheetlist.keys():
 
@@ -288,9 +288,6 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
                     
         self.canvas.axes.legend()
         self.canvas.draw()
-        
-        
-
 
 
 def main():
