@@ -3,11 +3,12 @@ import json
 import sys 
 import pandas as pd
 import numpy as np
-from PyQt5 import QtWidgets, QtCore
+
+from datetime import date, datetime
+from PyQt5 import QtGui, QtWidgets, QtCore
 from sympy import S, symbols, printing
 
 import design_with_table
-import matplotlib.pyplot as plt
 
 import matplotlib
 matplotlib.use('QT5Agg') # backend for qt app
@@ -48,6 +49,8 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
         self.y_dot_values = []
         self.x_poly_values = []
         self.y_poly_values = []
+        self.x_poly_values_list = []
+        self.y_poly_values_list = []
         self.powers = []
 
         self.power = 2
@@ -139,7 +142,37 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
 
     def save_file(self):
         ''' Save file as JSON ''' 
-        None
+        
+        x_dot_list = self.x_dot_values.tolist()
+        y_dot_list = self.y_dot_values.tolist()
+        powers = [power + 2 for power in self.powers]
+        
+
+        json_input = {
+            "dot_data" : {
+                "x_dot_values" : x_dot_list,
+                "y_dot_values" : y_dot_list,
+            },
+            "poly_data": {
+                "powers" : powers,
+                "x_poly_values" : self.x_poly_values_list,
+                "y_poly_values" : self.y_poly_values_list
+            },
+            "formula" : "",
+            "date_added": ""
+        }
+
+        
+        path = QtWidgets.QFileDialog.getSaveFileName(
+            self,
+            'Введите имя файла',
+            '', 
+        )
+
+        file_path = str(path[0]) + '.json'
+        with open(file_path, 'w') as json_file:
+            json.dump(json_input, json_file, indent = 4)
+        
 
 
     def display_formula(self):
@@ -160,6 +193,9 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
         
         if items:
             
+            self.x_poly_values_list = []
+            self.y_poly_values_list = []
+
             for item in items:
                 self.power = item + 2
                 
@@ -178,9 +214,12 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
                 self.x_poly_values = np.linspace(
                     self.x_dot_values.values[0],
                     self.x_dot_values.values[-1],
-                    num = 500
+                    num = 5
                 )
                 self.y_poly_values = poly_class(self.x_poly_values)
+
+                self.x_poly_values_list.append(self.x_poly_values.tolist())
+                self.y_poly_values_list.append(self.y_poly_values.tolist())
 
                 if self.Display_formula_checkbox.isChecked():
                     
@@ -206,6 +245,7 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
                     
         self.canvas.axes.legend()
         self.canvas.draw()
+        print(self.x_poly_values_list, self.y_poly_values_list)
 
 
 
