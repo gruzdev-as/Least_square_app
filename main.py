@@ -4,9 +4,10 @@ import sys
 import pandas as pd
 import numpy as np
 from PyQt5 import QtWidgets, QtCore
+from sympy import S, symbols, printing
 
 import design_with_table
-
+import matplotlib.pyplot as plt
 
 import matplotlib
 matplotlib.use('QT5Agg') # backend for qt app
@@ -47,6 +48,7 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
         self.y_dot_values = []
         self.x_poly_values = []
         self.y_poly_values = []
+        self.powers = []
 
         self.power = 2
         
@@ -69,18 +71,17 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
         #Events
         self.Open_button.clicked.connect(self.open_file)
         self.Save_button.clicked.connect(self.save_file)
-        self.PowerTable.cellClicked.connect(self.testTable)
+        self.PowerTable.cellClicked.connect(self.choose_power)
         self.Display_formula_checkbox.stateChanged.connect(self.display_formula)
 
 
-    def testTable(self):
-        #print('hey', type(item), str(item))
-        items = []
-        for item in self.PowerTable.selectedItems():
-            items.append(item.row())
-            print (items)
+    def choose_power(self):
         
-        self.draw_graph(items)
+        self.powers = []
+        for item in self.PowerTable.selectedItems():
+            self.powers.append(item.row())
+        
+        self.draw_graph(self.powers)
         
 
     def open_file(self):
@@ -110,6 +111,7 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
         else:
             self.open_excell(file_path)
         
+
     def open_json(self, path):
         
         with open(path, 'r') as data_file:
@@ -120,7 +122,8 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
             self.x_dot_values = data['x_values'] 
             self.y_dot_values = data['y_values']
             self.draw_graph()
-            
+
+
     def open_excell(self, path):
         
         excell_file = pd.ExcelFile(path)
@@ -132,33 +135,17 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
         self.PowerTable.setEnabled(True)
         self.Display_formula_checkbox.setEnabled(True)
         self.Save_button.setEnabled(True)
-        
 
-        
+
     def save_file(self):
         ''' Save file as JSON ''' 
         None
 
 
-    def choose_power(self, item):
-
-        self.power = int(item)
-        print(int(item))
-        if len(self.x_dot_values) != 0:
-            self.draw_graph()
-
-
-    def display_all(self):
-        
-        print('hey', self.Display_all_checkbox.isChecked())
-
-
     def display_formula(self):
 
-        print('hey', self.Display_formula_checkbox.isChecked())
-        
-        if self.x_values != []:
-            self.draw_graph()
+        # redraw
+        self.draw_graph(self.powers)
 
 
     def draw_graph(self, items = None):
@@ -170,45 +157,57 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
             self.y_dot_values, 
             color = 'red'
             )
-    
-        
-        if self.Display_formula_checkbox.isChecked():
-            self.get_formula()
-        
         
         if items:
-            print(items)
-            print(type(items))
+            
             for item in items:
                 self.power = item + 2
                 
-                z = np.polyfit(
+                # With least square method
+                polynom = np.polyfit(
                     self.x_dot_values,
                     self.y_dot_values,
                     self.power
                 )
                 
-                p = np.poly1d(z)
+                # Encapsulates a polynomial for the convenience 
+                # of performing operations on it in the future
+                poly_class = np.poly1d(polynom)
                 
+                # Dividing the space equally at intervals for construction
                 self.x_poly_values = np.linspace(
                     self.x_dot_values.values[0],
                     self.x_dot_values.values[-1],
-                    num = 50
+                    num = 500
                 )
-                self.y_poly_values = p(self.x_poly_values)
+                self.y_poly_values = poly_class(self.x_poly_values)
 
-                self.canvas.axes.plot(
+                if self.Display_formula_checkbox.isChecked():
+                    
+                    x = symbols('x')
+                    formula = sum(S("{:6.2f}".format(v))*x**i for i, v in enumerate(polynom[::-1]))
+                    label = printing.latex(formula)
+
+                    self.canvas.axes.plot(
                     self.x_poly_values,
                     self.y_poly_values,
-                )
-
+                    label = "${}$" .format(label)
+                    )
+                
+                else: 
+                    
+                    label = '{} степень полинома' .format(self.power)
+                    
+                    self.canvas.axes.plot(
+                    self.x_poly_values,
+                    self.y_poly_values,
+                    label = label
+                    )
+                    
+        self.canvas.axes.legend()
         self.canvas.draw()
 
 
-    def get_formula(self):
-        None
-        
-        
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
