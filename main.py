@@ -52,13 +52,17 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
         self.x_poly_values_list = []
         self.y_poly_values_list = []
         self.powers = []
+        self.formulas = []
+        self.power = 0
 
-        self.power = 2
+        
         
         for row in range (0, 8):
-            self.PowerTable.setItem(row, 0, 
+            self.PowerTable.setItem(
+                row, 
+                0, 
                 QtWidgets.QTableWidgetItem('{} степень полинома' .format(row+2))
-                )
+            )
 
         
         # Canvas setting 
@@ -82,7 +86,7 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
         
         self.powers = []
         for item in self.PowerTable.selectedItems():
-            self.powers.append(item.row())
+            self.powers.append((item.row()+2))
         
         self.draw_graph(self.powers)
         
@@ -130,10 +134,9 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
     def open_excell(self, path):
         
         excell_file = pd.ExcelFile(path)
-        print(excell_file.sheet_names)
-        df1 = excell_file.parse('Bla')
-        self.x_dot_values = df1['x_values']
-        self.y_dot_values = df1['y_values']
+        data_frame_1 = excell_file.parse('Sheet1')
+        self.x_dot_values = data_frame_1['x_dot_values']
+        self.y_dot_values = data_frame_1['y_dot_values']
         self.draw_graph()
         self.PowerTable.setEnabled(True)
         self.Display_formula_checkbox.setEnabled(True)
@@ -144,22 +147,22 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
         ''' Save file as JSON ''' 
         
         x_dot_list = self.x_dot_values.tolist()
-        y_dot_list = self.y_dot_values.tolist()
-        powers = [power + 2 for power in self.powers]
-        
+        y_dot_list = self.y_dot_values.tolist()     
 
         json_input = {
+            
+            "date_added": str(datetime.now()),
             "dot_data" : {
                 "x_dot_values" : x_dot_list,
                 "y_dot_values" : y_dot_list,
             },
+            "formula" : self.formulas,
             "poly_data": {
-                "powers" : powers,
+                "powers" : self.powers,
                 "x_poly_values" : self.x_poly_values_list,
                 "y_poly_values" : self.y_poly_values_list
             },
-            "formula" : "",
-            "date_added": ""
+            "formula" : self.formulas,
         }
 
         
@@ -172,6 +175,42 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
         file_path = str(path[0]) + '.json'
         with open(file_path, 'w') as json_file:
             json.dump(json_input, json_file, indent = 4)
+        self.save_excell()
+
+        
+    def save_excell(self):
+        
+        sheetlist = {}
+
+        excell_dot_df = pd.DataFrame({
+                
+                'x_dot_values' : self.x_dot_values.tolist(),
+                'y_dot_values' : self.y_dot_values.tolist()
+                
+            })
+
+        sheetlist['dots'] = excell_dot_df
+
+        for iteration in range(0, len(self.powers)):
+
+            
+            excell_poly_df = pd.DataFrame({
+
+                'x_poly_values' : self.x_poly_values_list[iteration],
+                'y_poly_values' : self.y_poly_values_list[iteration]
+
+            })
+
+            sheetlist['poly {}' .format(self.powers[iteration])] = excell_poly_df
+
+        writer = pd.ExcelWriter(
+            './data/file.xlsx',
+        )
+        for sheet in sheetlist.keys():
+
+            sheetlist[sheet].to_excel(writer , index = False, sheet_name = sheet)
+        
+        writer.save()
         
 
 
@@ -193,11 +232,13 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
         
         if items:
             
-            self.x_poly_values_list = []
-            self.y_poly_values_list = []
+            self.x_poly_values_list.clear()
+            self.y_poly_values_list.clear()
+            self.formulas.clear() 
 
             for item in items:
-                self.power = item + 2
+                
+                self.power = item
                 
                 # With least square method
                 polynom = np.polyfit(
@@ -214,18 +255,20 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
                 self.x_poly_values = np.linspace(
                     self.x_dot_values.values[0],
                     self.x_dot_values.values[-1],
-                    num = 5
+                    num = 50
                 )
                 self.y_poly_values = poly_class(self.x_poly_values)
 
-                self.x_poly_values_list.append(self.x_poly_values.tolist())
+                self.x_poly_values_list.append(self.x_poly_values.tolist()) # TODO Надо как-то округлить значения в листах, хотя, возможно и так хватит
                 self.y_poly_values_list.append(self.y_poly_values.tolist())
+
 
                 if self.Display_formula_checkbox.isChecked():
                     
                     x = symbols('x')
                     formula = sum(S("{:6.2f}".format(v))*x**i for i, v in enumerate(polynom[::-1]))
                     label = printing.latex(formula)
+                    self.formulas.append(str(formula))
 
                     self.canvas.axes.plot(
                     self.x_poly_values,
@@ -245,7 +288,8 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
                     
         self.canvas.axes.legend()
         self.canvas.draw()
-        print(self.x_poly_values_list, self.y_poly_values_list)
+        
+        
 
 
 
