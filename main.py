@@ -8,7 +8,7 @@ from datetime import date, datetime
 from PyQt5 import QtGui, QtWidgets, QtCore
 from sympy import S, symbols, printing
 
-import design_with_table
+import design_feature_2
 
 import matplotlib
 matplotlib.use('QT5Agg') # backend for qt app
@@ -37,7 +37,7 @@ class MplCanvase(FigureCanvas):
         super().__init__(fig)
         
 
-class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
+class Application(QtWidgets.QMainWindow, design_feature_2.Ui_MainWindow):
 
     def __init__(self):
         ''' Init a file for acess to vars and methods in design.py'''
@@ -54,8 +54,11 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
         self.powers = []
         self.formulas = []
         self.power = 0
+        self.points_number = 50
 
         
+        self.Number_of_points.insert(str(self.points_number))
+        self.Number_of_points.setValidator(QtGui.QIntValidator(0, 1000))
         
         for row in range (0, 8):
             self.PowerTable.setItem(
@@ -80,6 +83,21 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
         self.Save_button.clicked.connect(self.save_file)
         self.PowerTable.cellClicked.connect(self.choose_power)
         self.Display_formula_checkbox.stateChanged.connect(self.display_formula)
+        self.Number_of_points.textChanged.connect(self.changed_number_of_points)
+
+    def changed_number_of_points(self, item):
+
+        self.points_number = item
+        
+        if len(self.points_number) == 0:
+            self.points_number = 1
+            self.Number_of_points.insert(str(self.points_number))
+            self.Text_box.addItem('Error message')
+        else:
+            # redraw
+            int(self.points_number)
+            self.draw_graph(self.powers)
+
 
 
     def choose_power(self):
@@ -255,7 +273,7 @@ class Application(QtWidgets.QMainWindow, design_with_table.Ui_MainWindow):
                 self.x_poly_values = np.linspace(
                     self.x_dot_values.values[0],
                     self.x_dot_values.values[-1],
-                    num = 50
+                    num = self.points_number
                 )
                 self.y_poly_values = poly_class(self.x_poly_values)
 
