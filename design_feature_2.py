@@ -58,6 +58,7 @@ class Ui_MainWindow(object):
         self.label_2.setObjectName("label_2")
         self.verticalLayout_4.addWidget(self.label_2)
         self.Number_of_points = QtWidgets.QLineEdit(self.centralwidget)
+        self.Number_of_points.setEnabled(False)
         self.Number_of_points.setMaximumSize(QtCore.QSize(190, 150))
         self.Number_of_points.setMaxLength(3)
         self.Number_of_points.setObjectName("Number_of_points")

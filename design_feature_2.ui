@@ -139,6 +139,9 @@
         </item>
         <item>
          <widget class="QLineEdit" name="Number_of_points">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="maximumSize">
            <size>
             <width>190</width>

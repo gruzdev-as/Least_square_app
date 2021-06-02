@@ -95,7 +95,7 @@ class Application(QtWidgets.QMainWindow, design_feature_2.Ui_MainWindow):
             self.Text_box.addItem('Error message')
         else:
             # redraw
-            int(self.points_number)
+            self.points_number = int(self.points_number)
             self.draw_graph(self.powers)
 
 
@@ -106,6 +106,7 @@ class Application(QtWidgets.QMainWindow, design_feature_2.Ui_MainWindow):
         for item in self.PowerTable.selectedItems():
             self.powers.append((item.row()+2))
         
+        self.Number_of_points.setEnabled(True)
         self.draw_graph(self.powers)
         
 
