@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>963</width>
-    <height>640</height>
+    <width>1000</width>
+    <height>900</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1000</width>
+    <height>900</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1000</width>
+    <height>900</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -16,10 +28,23 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
-     <widget class="QWidget" name="widget" native="true"/>
+     <widget class="QWidget" name="widget" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>600</height>
+       </size>
+      </property>
+     </widget>
     </item>
     <item>
-     <widget class="QListWidget" name="text_box">
+     <widget class="QListWidget" name="Text_box">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>50</height>
+       </size>
+      </property>
       <property name="maximumSize">
        <size>
         <width>16777215</width>
@@ -29,38 +54,119 @@
      </widget>
     </item>
     <item>
-     <widget class="QCheckBox" name="display_all_checkbox">
-      <property name="text">
-       <string>Отобразить графики всех степеней полинома</string>
+     <widget class="QCheckBox" name="Display_formula_checkbox">
+      <property name="enabled">
+       <bool>false</bool>
       </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QCheckBox" name="display_formula_checkbox">
       <property name="text">
        <string>Отобразить формулу полинома</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QComboBox" name="Choose_power">
-      <property name="enabled">
-       <bool>false</bool>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QTableWidget" name="PowerTable">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>890</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>150</height>
+         </size>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="rowCount">
+         <number>8</number>
+        </property>
+        <property name="columnCount">
+         <number>1</number>
+        </property>
+        <attribute name="horizontalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="horizontalHeaderDefaultSectionSize">
+         <number>1000</number>
+        </attribute>
+        <attribute name="horizontalHeaderHighlightSections">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+        <row/>
+        <row/>
+        <row/>
+        <row/>
+        <row/>
+        <row/>
+        <row/>
+        <row/>
+        <column/>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Количество 
+точек 
+полинома:</string>
+          </property>
+          <property name="scaledContents">
+           <bool>false</bool>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="Number_of_points">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>190</width>
+            <height>150</height>
+           </size>
+          </property>
+          <property name="maxLength">
+           <number>3</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>20</height>
+       </size>
       </property>
-      <property name="tabletTracking">
-       <bool>false</bool>
-      </property>
-      <property name="editable">
-       <bool>false</bool>
-      </property>
-      <property name="currentText">
-       <string/>
-      </property>
-      <property name="currentIndex">
-       <number>-1</number>
-      </property>
-      <property name="insertPolicy">
-       <enum>QComboBox::InsertAtBottom</enum>
+      <property name="text">
+       <string>Вы можете выбирать несколько степеней полинома при помощи клавиши CTRL, а также выбрать диапазон при помощи клавиши SHIFT</string>
       </property>
      </widget>
     </item>
@@ -73,6 +179,9 @@
     </item>
     <item>
      <widget class="QPushButton" name="Save_button">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="text">
        <string>Сохранить результаты</string>
       </property>

@@ -8,7 +8,7 @@ from datetime import datetime
 from PyQt5 import QtGui, QtWidgets
 from sympy import S, symbols, printing
 
-import design_feature_2
+import design
 
 import matplotlib
 matplotlib.use('QT5Agg') # backend for qt app
@@ -37,14 +37,14 @@ class MplCanvase(FigureCanvas):
         super().__init__(fig)
         
 
-class Application(QtWidgets.QMainWindow, design_feature_2.Ui_MainWindow):
+class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def __init__(self):
         ''' Init a file for acess to vars and methods in design.py'''
         super().__init__()
         self.setupUi(self) # design init
 
-        # Vars
+        # Vars and default values
         self.x_dot_values = []
         self.y_dot_values = []
         self.x_poly_values = []
@@ -56,7 +56,6 @@ class Application(QtWidgets.QMainWindow, design_feature_2.Ui_MainWindow):
         self.power = 0
         self.points_number = 50
 
-        
         self.Number_of_points.insert(str(self.points_number))
         self.Number_of_points.setValidator(QtGui.QIntValidator(0, 1000))
         
@@ -202,7 +201,7 @@ class Application(QtWidgets.QMainWindow, design_feature_2.Ui_MainWindow):
 
     def choose_power(self):
         
-        self.powers = []
+        self.powers.clear()
         for item in self.PowerTable.selectedItems():
             self.powers.append((item.row() + 2))
         
