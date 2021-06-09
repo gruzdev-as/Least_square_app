@@ -189,6 +189,31 @@
     </item>
    </layout>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1000</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuAuthor">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="Author"/>
+   </widget>
+   <addaction name="menuAuthor"/>
+  </widget>
+  <action name="Author">
+   <property name="text">
+    <string>Author</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

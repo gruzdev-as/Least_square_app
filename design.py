@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'design_feature_2.ui'
+# Form implementation generated from reading ui file 'design.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -77,6 +77,17 @@ class Ui_MainWindow(object):
         self.Save_button.setObjectName("Save_button")
         self.verticalLayout_3.addWidget(self.Save_button)
         MainWindow.setCentralWidget(self.centralwidget)
+        self.menuBar = QtWidgets.QMenuBar(MainWindow)
+        self.menuBar.setEnabled(True)
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1000, 22))
+        self.menuBar.setObjectName("menuBar")
+        self.menuAuthor = QtWidgets.QMenu(self.menuBar)
+        self.menuAuthor.setObjectName("menuAuthor")
+        MainWindow.setMenuBar(self.menuBar)
+        self.Author = QtWidgets.QAction(MainWindow)
+        self.Author.setObjectName("Author")
+        self.menuAuthor.addAction(self.Author)
+        self.menuBar.addAction(self.menuAuthor.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -91,3 +102,5 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Вы можете выбирать несколько степеней полинома при помощи клавиши CTRL, а также выбрать диапазон при помощи клавиши SHIFT"))
         self.Open_button.setText(_translate("MainWindow", "Выбрать файл с входными данными"))
         self.Save_button.setText(_translate("MainWindow", "Сохранить результаты"))
+        self.menuAuthor.setTitle(_translate("MainWindow", "About"))
+        self.Author.setText(_translate("MainWindow", "Author"))

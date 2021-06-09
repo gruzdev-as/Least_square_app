@@ -1,11 +1,11 @@
 ''' Main file for app ''' 
 import json
-import sys 
+import sys
 import pandas as pd
 import numpy as np
 
 from datetime import datetime
-from PyQt5 import QtGui, QtWidgets
+from PyQt5 import QtGui, QtWidgets, uic
 from sympy import S, symbols, printing
 
 import design
@@ -83,6 +83,8 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.PowerTable.cellClicked.connect(self.choose_power)
         self.Display_formula_checkbox.stateChanged.connect(self.display_formula)
         self.Number_of_points.textChanged.connect(self.changed_number_of_points)
+        self.menuAuthor.triggered.connect(self.author_page_open)
+    
 
     def open_file(self):
         ''' Open file for analysis ''' 
@@ -174,7 +176,6 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
                 sheetlist['poly {}' .format(self.powers[iteration])] = excell_poly_df
 
-            print(path)
             file_path = str(path[0])
             writer = pd.ExcelWriter(file_path+ '.xlsx',)
             
@@ -269,6 +270,9 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 )
                 self.y_poly_values = poly_class(self.x_poly_values)
 
+                self.x_poly_values = np.round(self.x_poly_values, 2)
+                self.y_poly_values = np.round(self.y_poly_values, 2)
+
                 self.x_poly_values_list.append(self.x_poly_values.tolist()) # TODO Надо как-то округлить значения в листах, хотя, возможно и так хватит
                 self.y_poly_values_list.append(self.y_poly_values.tolist())
 
@@ -303,6 +307,11 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.canvas.draw()
 
 
+    def author_page_open(self):
+        self.author_window = uic.loadUi('author_window.ui')
+        self.author_window.show()
+        
+        
 def main():
     app = QtWidgets.QApplication(sys.argv)
     window = Application()
