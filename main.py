@@ -64,7 +64,7 @@ class Application(QtWidgets.QMainWindow, design_feature_2.Ui_MainWindow):
             self.PowerTable.setItem(
                 row, 
                 0, 
-                QtWidgets.QTableWidgetItem('{} степень полинома' .format(row+2))
+                QtWidgets.QTableWidgetItem('{} степень полинома' .format(row + 2))
             )
 
         
@@ -89,10 +89,11 @@ class Application(QtWidgets.QMainWindow, design_feature_2.Ui_MainWindow):
 
         self.points_number = item
         
-        if len(self.points_number) == 0:
-            self.points_number = 1
+        if len(self.points_number) <= 0:
+            self.points_number = 2
             self.Number_of_points.insert(str(self.points_number))
-            self.Text_box.addItem('Error message')
+            self.Text_box.clear()
+            self.Text_box.addItem('Точек недостаточно для построения графика')
         else:
             # redraw
             self.points_number = int(self.points_number)
@@ -104,7 +105,7 @@ class Application(QtWidgets.QMainWindow, design_feature_2.Ui_MainWindow):
         
         self.powers = []
         for item in self.PowerTable.selectedItems():
-            self.powers.append((item.row()+2))
+            self.powers.append((item.row() + 2))
         
         self.Number_of_points.setEnabled(True)
         self.draw_graph(self.powers)
@@ -120,6 +121,7 @@ class Application(QtWidgets.QMainWindow, design_feature_2.Ui_MainWindow):
             'Выберите файл с данными',
             # Base Dir
             '',
+            # File Formats
             '*.json *.xls *.xlsx'
         )
 
@@ -214,20 +216,19 @@ class Application(QtWidgets.QMainWindow, design_feature_2.Ui_MainWindow):
 
             
             excell_poly_df = pd.DataFrame({
-
                 'x_poly_values' : self.x_poly_values_list[iteration],
                 'y_poly_values' : self.y_poly_values_list[iteration]
-
             })
 
             sheetlist['poly {}' .format(self.powers[iteration])] = excell_poly_df
 
-        writer = pd.ExcelWriter(
-            path + '.xlsx',
-        )
+        writer = pd.ExcelWriter(path + '.xlsx',)
         for sheet in sheetlist.keys():
-
-            sheetlist[sheet].to_excel(writer , index = False, sheet_name = sheet)
+            sheetlist[sheet].to_excel(
+                writer, 
+                index = False,
+                sheet_name = sheet
+            )
         
         writer.save()
         
@@ -285,14 +286,17 @@ class Application(QtWidgets.QMainWindow, design_feature_2.Ui_MainWindow):
                 if self.Display_formula_checkbox.isChecked():
                     
                     x = symbols('x')
+                    
                     formula = sum(S("{:6.2f}".format(v))*x**i for i, v in enumerate(polynom[::-1]))
+                    
                     label = printing.latex(formula)
+                    
                     self.formulas.append(str(formula))
 
                     self.canvas.axes.plot(
-                    self.x_poly_values,
-                    self.y_poly_values,
-                    label = "${}$" .format(label)
+                        self.x_poly_values,
+                        self.y_poly_values,
+                        label = "${}$" .format(label)
                     )
                 
                 else: 
@@ -300,9 +304,9 @@ class Application(QtWidgets.QMainWindow, design_feature_2.Ui_MainWindow):
                     label = '{} степень полинома' .format(self.power)
                     
                     self.canvas.axes.plot(
-                    self.x_poly_values,
-                    self.y_poly_values,
-                    label = label
+                        self.x_poly_values,
+                        self.y_poly_values,
+                        label = label
                     )
                     
         self.canvas.axes.legend()
