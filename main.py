@@ -4,8 +4,8 @@ import sys
 import pandas as pd
 import numpy as np
 
-from datetime import date, datetime
-from PyQt5 import QtGui, QtWidgets, QtCore
+from datetime import datetime
+from PyQt5 import QtGui, QtWidgets
 from sympy import S, symbols, printing
 
 import design_feature_2
@@ -85,36 +85,30 @@ class Application(QtWidgets.QMainWindow, design_feature_2.Ui_MainWindow):
         self.Display_formula_checkbox.stateChanged.connect(self.display_formula)
         self.Number_of_points.textChanged.connect(self.changed_number_of_points)
 
-    def changed_number_of_points(self, item):
-
-        self.points_number = item
-        
-        if len(self.points_number) <= 0:
-            self.points_number = 2
-            self.Number_of_points.insert(str(self.points_number))
-            self.Text_box.clear()
-            self.Text_box.addItem('Точек недостаточно для построения графика')
-        else:
-            # redraw
-            self.points_number = int(self.points_number)
-            self.draw_graph(self.powers)
-
-
-
-    def choose_power(self):
-        
-        self.powers = []
-        for item in self.PowerTable.selectedItems():
-            self.powers.append((item.row() + 2))
-        
-        self.Number_of_points.setEnabled(True)
-        self.draw_graph(self.powers)
-        
-
     def open_file(self):
         ''' Open file for analysis ''' 
+
+        def open_json(path):
         
-        self.Text_box.clear()
+            with open(path, 'r') as data_file:
+                    
+                json_dict = json.loads(data_file.read())
+                data = json_dict['data']
+                
+                self.x_dot_values = data['x_values'] 
+                self.y_dot_values = data['y_values']
+                self.draw_graph()
+
+        def open_excell(path):
+        
+            excell_file = pd.ExcelFile(path)
+            data_frame_1 = excell_file.parse('dots')
+            self.x_dot_values = data_frame_1['x_dot_values']
+            self.y_dot_values = data_frame_1['y_dot_values']
+            self.draw_graph()
+            self.PowerTable.setEnabled(True)
+            self.Display_formula_checkbox.setEnabled(True)
+            self.Save_button.setEnabled(True)
 
         file_information_list = QtWidgets.QFileDialog.getOpenFileName(
             self,
@@ -128,116 +122,113 @@ class Application(QtWidgets.QMainWindow, design_feature_2.Ui_MainWindow):
         # 0 index because of getOpenFileName method return 
         # path + file types '*.json *.xls *.xlsx' as list
         file_path = file_information_list[0]
-
         
         file_type = file_path.split(sep = '.')
         file_type = file_type[1]
 
         if file_type == 'json':
-            self.open_json(file_path)
+            open_json(file_path)
 
         else:
-            self.open_excell(file_path)
+            open_excell(file_path)
         
-
-    def open_json(self, path):
-        
-        with open(path, 'r') as data_file:
-                
-            json_dict = json.loads(data_file.read())
-            data = json_dict['data']
-            
-            self.x_dot_values = data['x_values'] 
-            self.y_dot_values = data['y_values']
-            self.draw_graph()
-
-
-    def open_excell(self, path):
-        
-        excell_file = pd.ExcelFile(path)
-        data_frame_1 = excell_file.parse('dots')
-        self.x_dot_values = data_frame_1['x_dot_values']
-        self.y_dot_values = data_frame_1['y_dot_values']
-        self.draw_graph()
-        self.PowerTable.setEnabled(True)
-        self.Display_formula_checkbox.setEnabled(True)
-        self.Save_button.setEnabled(True)
-
 
     def save_file(self):
-        ''' Save file as JSON ''' 
+        ''' Save file as JSON & Excell''' 
         
+        def save_json(path):
+            
+            json_input = {
+                "date_added": str(datetime.now()),
+                "dot_data" : {
+                    "x_dot_values" : x_dot_list,
+                    "y_dot_values" : y_dot_list,
+                },
+                "formula" : self.formulas,
+                "poly_data": {
+                    "powers" : self.powers,
+                    "x_poly_values" : self.x_poly_values_list,
+                    "y_poly_values" : self.y_poly_values_list
+                },
+                "formula" : self.formulas,
+            }
+
+            file_path = str(path[0]) + '.json'
+            with open(file_path, 'w') as json_file:
+                json.dump(json_input, json_file, indent = 4)
+
+        def save_excell(path):
+            
+            sheetlist = {}
+            excell_dot_df = pd.DataFrame({
+                'x_dot_values' : self.x_dot_values.tolist(),
+                'y_dot_values' : self.y_dot_values.tolist()
+            })
+
+            sheetlist['dots'] = excell_dot_df
+
+            for iteration in range(0, len(self.powers)):
+                excell_poly_df = pd.DataFrame({
+                    'x_poly_values' : self.x_poly_values_list[iteration],
+                    'y_poly_values' : self.y_poly_values_list[iteration]
+                })
+
+                sheetlist['poly {}' .format(self.powers[iteration])] = excell_poly_df
+
+            print(path)
+            file_path = str(path[0])
+            writer = pd.ExcelWriter(file_path+ '.xlsx',)
+            
+            for sheet in sheetlist.keys():
+                sheetlist[sheet].to_excel(
+                    writer, 
+                    index = False,
+                    sheet_name = sheet
+                )
+            writer.save()
+
         x_dot_list = self.x_dot_values.tolist()
         y_dot_list = self.y_dot_values.tolist()     
 
-        json_input = {
-            
-            "date_added": str(datetime.now()),
-            "dot_data" : {
-                "x_dot_values" : x_dot_list,
-                "y_dot_values" : y_dot_list,
-            },
-            "formula" : self.formulas,
-            "poly_data": {
-                "powers" : self.powers,
-                "x_poly_values" : self.x_poly_values_list,
-                "y_poly_values" : self.y_poly_values_list
-            },
-            "formula" : self.formulas,
-        }
-
-        
         path = QtWidgets.QFileDialog.getSaveFileName(
             self,
             'Введите имя файла',
             '', 
         )
-
-        file_path = str(path[0]) + '.json'
-        with open(file_path, 'w') as json_file:
-            json.dump(json_input, json_file, indent = 4)
-        self.save_excell(str(path[0]))
-
         
-    def save_excell(self, path):
+        save_json(path)
+        save_excell(path)
+
+
+    def choose_power(self):
         
-        sheetlist = {}
-
-        excell_dot_df = pd.DataFrame({
-                
-                'x_dot_values' : self.x_dot_values.tolist(),
-                'y_dot_values' : self.y_dot_values.tolist()
-                
-            })
-
-        sheetlist['dots'] = excell_dot_df
-
-        for iteration in range(0, len(self.powers)):
-
-            
-            excell_poly_df = pd.DataFrame({
-                'x_poly_values' : self.x_poly_values_list[iteration],
-                'y_poly_values' : self.y_poly_values_list[iteration]
-            })
-
-            sheetlist['poly {}' .format(self.powers[iteration])] = excell_poly_df
-
-        writer = pd.ExcelWriter(path + '.xlsx',)
-        for sheet in sheetlist.keys():
-            sheetlist[sheet].to_excel(
-                writer, 
-                index = False,
-                sheet_name = sheet
-            )
+        self.powers = []
+        for item in self.PowerTable.selectedItems():
+            self.powers.append((item.row() + 2))
         
-        writer.save()
-        
+        self.Number_of_points.setEnabled(True)
+        self.draw_graph(self.powers)
 
 
     def display_formula(self):
 
         # redraw
         self.draw_graph(self.powers)
+
+
+    def changed_number_of_points(self, item):
+
+        self.points_number = item
+        
+        if len(self.points_number) <= 0:
+            self.points_number = 2
+            self.Number_of_points.insert(str(self.points_number))
+            self.Text_box.clear()
+            self.Text_box.addItem('Точек недостаточно для построения графика')
+        else:
+            # redraw
+            self.points_number = int(self.points_number)
+            self.draw_graph(self.powers)
 
 
     def draw_graph(self, items = None):
