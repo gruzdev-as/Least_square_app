@@ -59,11 +59,11 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.Number_of_points.insert(str(self.points_number))
         self.Number_of_points.setValidator(QtGui.QIntValidator(0, 1000))
         
-        for row in range (0, 8):
+        for row in range (0, 9):
             self.PowerTable.setItem(
                 row, 
                 0, 
-                QtWidgets.QTableWidgetItem('{} степень полинома' .format(row + 2))
+                QtWidgets.QTableWidgetItem('{} степень полинома' .format(row + 1))
             )
 
         
@@ -177,13 +177,13 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 sheetlist['poly {}' .format(self.powers[iteration])] = excell_poly_df
 
             file_path = str(path[0])
-            writer = pd.ExcelWriter(file_path+ '.xlsx',)
+            writer = pd.ExcelWriter(file_path + '.xlsx',)
             
             for sheet in sheetlist.keys():
                 sheetlist[sheet].to_excel(
                     writer, 
-                    index = False,
-                    sheet_name = sheet
+                    index=False,
+                    sheet_name=sheet
                 )
             writer.save()
 
@@ -204,7 +204,7 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
         
         self.powers.clear()
         for item in self.PowerTable.selectedItems():
-            self.powers.append((item.row() + 2))
+            self.powers.append((item.row() + 1))
         
         self.Number_of_points.setEnabled(True)
         self.draw_graph(self.powers)
@@ -238,7 +238,8 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.canvas.axes.scatter(
             self.x_dot_values, 
             self.y_dot_values, 
-            color = 'red'
+            color='red',
+            s=2
             )
         
         if items:
@@ -266,7 +267,7 @@ class Application(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 self.x_poly_values = np.linspace(
                     self.x_dot_values.values[0],
                     self.x_dot_values.values[-1],
-                    num = self.points_number
+                    num=self.points_number
                 )
                 self.y_poly_values = poly_class(self.x_poly_values)
 
