@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1218</width>
-    <height>840</height>
+    <width>1200</width>
+    <height>900</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -16,13 +16,25 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>1200</width>
+    <height>900</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1218</width>
+    <height>900</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Основное окно</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QTabWidget" name="tabWidget">
+     <widget class="QTabWidget" name="main_tabs">
       <property name="minimumSize">
        <size>
         <width>1200</width>
@@ -32,7 +44,7 @@
       <property name="currentIndex">
        <number>1</number>
       </property>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="master_tab">
        <attribute name="title">
         <string>Определение максимальных усилий</string>
        </attribute>
@@ -50,7 +62,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBox">
+         <widget class="QComboBox" name="master_comboBox">
           <property name="font">
            <font>
             <pointsize>12</pointsize>
@@ -71,7 +83,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit">
+         <widget class="QLineEdit" name="master_square_edit">
           <property name="font">
            <font>
             <pointsize>12</pointsize>
@@ -80,7 +92,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_5">
+         <widget class="QLabel" name="master_maxForce_label">
           <property name="font">
            <font>
             <pointsize>12</pointsize>
@@ -92,7 +104,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_6">
+         <widget class="QLabel" name="master_recForce_label">
           <property name="font">
            <font>
             <pointsize>12</pointsize>
@@ -123,11 +135,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="widget" native="true">
+         <widget class="QWidget" name="master_grapth_widget" native="true">
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>400</height>
+            <height>500</height>
            </size>
           </property>
          </widget>
@@ -140,7 +152,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_9">
+         <widget class="QLabel" name="master_equation_label">
           <property name="text">
            <string>TextLabel</string>
           </property>
@@ -154,7 +166,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_11">
+         <widget class="QLabel" name="master_label_accuracy">
           <property name="text">
            <string>TextLabel</string>
           </property>
@@ -162,7 +174,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="build_tab">
        <attribute name="title">
         <string>Построение предсказательной модели</string>
        </attribute>
@@ -190,7 +202,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="toolButton">
+           <widget class="QToolButton" name="build_about_toolButton">
             <property name="text">
              <string>Справка</string>
             </property>
@@ -199,59 +211,71 @@
          </layout>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="build_choosefile_button">
           <property name="text">
            <string>Выбрать файл с испытаниями для создания предсказательной модели</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QProgressBar" name="progressBar">
+         <widget class="QProgressBar" name="build_progresbar">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="value">
-           <number>24</number>
+           <number>0</number>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="widget_2" native="true">
+         <widget class="QWidget" name="build_graph_widget" native="true">
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>500</height>
+            <height>550</height>
            </size>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_13">
+         <widget class="QLabel" name="build_accuracy_label">
           <property name="text">
            <string>Точность данной предсказательной модели:</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_14">
+         <widget class="QLabel" name="build_equation_label">
           <property name="text">
            <string>Уравнение, описывающее зависимость максимально-допустимой нагрузки:</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_2">
+         <widget class="QLineEdit" name="build_modelName_edit">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Название_материала*Процент_заполнения</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_3">
+         <widget class="QPushButton" name="build_editdata_button">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Редактировать данные для создания модели</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="build_savemodel_button">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Сохранить созданную модель в БД под заданым именем </string>
           </property>
@@ -268,7 +292,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1218</width>
+     <width>1200</width>
      <height>22</height>
     </rect>
    </property>

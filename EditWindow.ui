@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1200</width>
-    <height>840</height>
+    <height>900</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -16,8 +16,20 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>1200</width>
+    <height>900</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1200</width>
+    <height>900</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Редактирование данных</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -26,7 +38,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_7">
         <item>
-         <widget class="QTableWidget" name="tableWidget">
+         <widget class="QTableWidget" name="edit_table">
           <attribute name="horizontalHeaderCascadingSectionResizes">
            <bool>false</bool>
           </attribute>
@@ -90,7 +102,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_4">
+         <widget class="QPushButton" name="edit_cancelEdit_button">
           <property name="text">
            <string>Отменить изменения</string>
           </property>
@@ -99,7 +111,7 @@
        </layout>
       </item>
       <item>
-       <widget class="QWidget" name="widget_3" native="true">
+       <widget class="QWidget" name="edit_dotGraph_widget" native="true">
         <property name="minimumSize">
          <size>
           <width>600</width>
@@ -111,33 +123,34 @@
      </layout>
     </item>
     <item>
-     <widget class="QWidget" name="widget_4" native="true">
+     <widget class="QWidget" name="edit_boxplotgraph_widget" native="true">
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>300</height>
+        <height>400</height>
        </size>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton_5">
-      <property name="text">
-       <string>Сохранить новый файл анализа и построить предсказательную модель</string>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="edit_save_button">
+        <property name="text">
+         <string>Сохранить новый файл анализа и построить предсказательную модель</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="edit_close_button">
+        <property name="text">
+         <string>Выйти без сохранения</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1200</width>
-     <height>22</height>
-    </rect>
-   </property>
   </widget>
  </widget>
  <resources/>
