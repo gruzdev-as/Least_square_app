@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1200</width>
+    <width>1218</width>
     <height>900</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>1200</width>
+    <width>1218</width>
     <height>900</height>
    </size>
   </property>
@@ -42,7 +42,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="master_tab">
        <attribute name="title">
@@ -218,6 +218,16 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="build_createModel_button">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Создать предсказательную модель</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QProgressBar" name="build_progresbar">
           <property name="enabled">
            <bool>false</bool>
@@ -292,7 +302,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1200</width>
+     <width>1218</width>
      <height>22</height>
     </rect>
    </property>

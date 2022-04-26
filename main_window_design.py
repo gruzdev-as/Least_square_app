@@ -14,13 +14,13 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1200, 900)
+        MainWindow.resize(1218, 900)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
-        MainWindow.setMinimumSize(QtCore.QSize(1200, 900))
+        MainWindow.setMinimumSize(QtCore.QSize(1218, 900))
         MainWindow.setMaximumSize(QtCore.QSize(1218, 900))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -120,6 +120,10 @@ class Ui_MainWindow(object):
         self.build_choosefile_button = QtWidgets.QPushButton(self.build_tab)
         self.build_choosefile_button.setObjectName("build_choosefile_button")
         self.verticalLayout_3.addWidget(self.build_choosefile_button)
+        self.build_createModel_button = QtWidgets.QPushButton(self.build_tab)
+        self.build_createModel_button.setEnabled(False)
+        self.build_createModel_button.setObjectName("build_createModel_button")
+        self.verticalLayout_3.addWidget(self.build_createModel_button)
         self.build_progresbar = QtWidgets.QProgressBar(self.build_tab)
         self.build_progresbar.setEnabled(False)
         self.build_progresbar.setProperty("value", 0)
@@ -151,7 +155,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.main_tabs)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1200, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1218, 22))
         self.menubar.setObjectName("menubar")
         self.menu = QtWidgets.QMenu(self.menubar)
         self.menu.setObjectName("menu")
@@ -159,7 +163,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.main_tabs.setCurrentIndex(1)
+        self.main_tabs.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -178,6 +182,7 @@ class Ui_MainWindow(object):
         self.label_12.setText(_translate("MainWindow", "Внимание! Перед построением модели ознакомьтесь с файлом-инструкцией о формате предоставляемых данных по кнопке справа! Использование данных неправильного формата может привести к экстренному закрытию программного продукта. "))
         self.build_about_toolButton.setText(_translate("MainWindow", "Справка"))
         self.build_choosefile_button.setText(_translate("MainWindow", "Выбрать файл с испытаниями для создания предсказательной модели"))
+        self.build_createModel_button.setText(_translate("MainWindow", "Создать предсказательную модель"))
         self.build_accuracy_label.setText(_translate("MainWindow", "Точность данной предсказательной модели:"))
         self.build_equation_label.setText(_translate("MainWindow", "Уравнение, описывающее зависимость максимально-допустимой нагрузки:"))
         self.build_modelName_edit.setText(_translate("MainWindow", "Название_материала*Процент_заполнения"))
