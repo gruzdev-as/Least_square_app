@@ -84,6 +84,9 @@
         </item>
         <item>
          <widget class="QLineEdit" name="master_square_edit">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="font">
            <font>
             <pointsize>12</pointsize>
@@ -135,7 +138,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="master_grapth_widget" native="true">
+         <widget class="QWidget" name="master_graph_widget" native="true">
           <property name="minimumSize">
            <size>
             <width>0</width>
