@@ -104,7 +104,7 @@
         <item>
          <widget class="QPushButton" name="edit_cancelEdit_button">
           <property name="text">
-           <string>Отменить изменения</string>
+           <string>Отменить изменения в таблице</string>
           </property>
          </widget>
         </item>
@@ -137,7 +137,7 @@
       <item>
        <widget class="QPushButton" name="edit_save_button">
         <property name="text">
-         <string>Сохранить новый файл анализа и построить предсказательную модель</string>
+         <string>Сохранить изменения в файле анализа</string>
         </property>
        </widget>
       </item>

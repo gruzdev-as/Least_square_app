@@ -10,6 +10,7 @@ class MplCanvase(FigureCanvas):
     ''' The class describe an empty canvas for QTWiget''' 
 
     def __init__(self):
+        
         ''' Executed when the class is instantiated '''
 
         fig = Figure()

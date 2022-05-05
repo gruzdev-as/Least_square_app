@@ -2,6 +2,8 @@
 Main window file methods
 '''
 
+import pandas as pd
+
 from PyQt5 import QtGui, QtWidgets, uic
 
 
@@ -56,23 +58,52 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         
         # Vars and variables
         
-
+        self.regression_df = None
+        
+        self.master_square_edit.setValidator(QtGui.QIntValidator(0, 1000))
+        
+        list1 = [
+            'First Item',
+            'Second Item',
+            'Third Item',
+        ]
+        self.master_comboBox.clear()
+        self.master_comboBox.addItems(list1)
+        
         # Events
         self.build_about_toolButton.clicked.connect(self.about_show)
         self.build_choosefile_button.clicked.connect(self.choose_file)
         self.build_createModel_button.clicked.connect(self.create_regression_model)
         self.build_editdata_button.clicked.connect(self.open_edit_window)
         self.build_savemodel_button.clicked.connect(self.save_model)
+        self.master_comboBox.currentTextChanged.connect(self.fetch_experiment_data)
+        self.master_square_edit.textChanged.connect(self.calculate)
         
-
+        
     def about_show(self):
         '''Showing manual how to prepare data for regression'''
         pass
     
     def choose_file(self):
         '''File choosing for regression model build'''
-        pass 
-    
+        
+        file_list = QtWidgets.QFileDialog.getOpenFileName(
+            self,
+            'Выберите файл с данными',
+            # Base Dir
+            '',
+            # File Formats
+            '*.csv'
+        )
+        
+        # 0 index because getOpenFileName method return 
+        # path + file type as a list
+        # TODO change a check method
+        if len(file_list[1]) > 0:
+            file_path = file_list[0]
+        
+        self.regression_df = pd.read_csv(file_path, sep = ',')
+        
     def create_regression_model(self):
         '''Initialize creating regression model'''
         pass
@@ -84,3 +115,12 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
     def save_model(self):
         '''Saving the regression model'''
         pass
+    
+    def fetch_experiment_data(self, text):
+        
+        self.master_square_edit.setEnabled(True)
+        
+        print(text)
+
+    def calculate(self, text):
+        print(text)
