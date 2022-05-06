@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np 
 from random import choices
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
@@ -14,12 +13,7 @@ class NewRegressionModel():
         self.model = None
         self.accuracy = None
         
-        self.vars = {
-            'equation': self.equation,
-            'model' : self.model,
-            'accuracy': self.accuracy
-        }
-        
+        self.vars = {}
         
     def create_model(self):
         '''Create and evaluate a regression model'''
@@ -45,11 +39,16 @@ class NewRegressionModel():
         y_test = test_df.max_force
         
         y_predicted = self.model.predict(X_test)
-        self.accuracy = r2_score(y_pred=y_predicted, y_true=y_test)
-        X = self.model.coef_[0]
-        Y = self.model.predict
+        self.accuracy = round(r2_score(y_pred=y_predicted, y_true=y_test), 3)
+        X = round(self.model.coef_[0], 3)
+        Y = round(self.model.intercept_, 3)
         self.equation = f'Max Force = {X} * Section Area + {Y}'
         
+        self.vars = {
+            'equation': self.equation,
+            'model' : self.model,
+            'accuracy': self.accuracy
+        }
         
         
         

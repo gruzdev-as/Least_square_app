@@ -3,11 +3,14 @@ Main window file methods
 '''
 
 import pandas as pd
+import time 
 
 from PyQt5 import QtGui, QtWidgets, uic
 
 
+from regression import NewRegressionModel
 from canvas import MplCanvase
+from messageBox import MessageBox
 
 from matplotlib.backends.backend_qt5agg import(
     NavigationToolbar2QT as NavigationToolbar,
@@ -23,45 +26,49 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         super().__init__()
         self.setupUi(self) # design init
         
-        # TODO refactoring
-        
+      
         # Canvas and toolbar setup
-        
         # Master page
         self.master_canvas = MplCanvase()
-        self.master_canvas_lay = QtWidgets.QVBoxLayout(self.master_graph_widget)
+        self.master_canvas_lay = QtWidgets.QVBoxLayout(
+            self.master_graph_widget
+            )
         self.master_toolbar = NavigationToolbar(
             self.master_canvas, 
             self.master_graph_widget
-        )
-            # Add a Canvas obj to a Widget
+            )
+        # Add a Canvas obj to a Widget
         self.master_canvas_lay.addWidget(self.master_canvas) 
-            # Add a toolbar to a Widget
+        # Add a toolbar to a Widget
         self.master_canvas_lay.addWidget(self.master_toolbar) 
         self.master_canvas.axes.clear()
         self.master_canvas.axes.grid()
         
         # Build page
         self.build_canvas = MplCanvase()
-        self.build_canvas_lay = QtWidgets.QVBoxLayout(self.build_graph_widget)
+        self.build_canvas_lay = QtWidgets.QVBoxLayout(
+            self.build_graph_widget
+            )
         self.build_toolbar = NavigationToolbar(
             self.build_canvas, 
             self.build_graph_widget
         )
-            # Add a Canvas obj to a Widget
+        # Add a Canvas obj to a Widget
         self.build_canvas_lay.addWidget(self.build_canvas) 
-            # Add a toolbar to a Widget
+        # Add a toolbar to a Widget
         self.build_canvas_lay.addWidget(self.build_toolbar) 
         self.build_canvas.axes.clear()
         self.build_canvas.axes.grid()
         
         
         # Vars and variables
-        
         self.regression_df = None
+
         
-        self.master_square_edit.setValidator(QtGui.QIntValidator(0, 1000))
+        # Validators
+        self.master_square_edit.setValidator(QtGui.QIntValidator(0, 100))
         
+        # TODO items from the database
         list1 = [
             'First Item',
             'Second Item',
@@ -82,8 +89,12 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         
     def about_show(self):
         '''Showing manual how to prepare data for regression'''
-        pass
-    
+
+        MessageBox(
+            title = 'Как готовить данные для регрессии',
+            text = 'Какая-то переменная или файлик будет хранить этот текст'
+            )
+
     def choose_file(self):
         '''File choosing for regression model build'''
         
@@ -98,16 +109,40 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         
         # 0 index because getOpenFileName method return 
         # path + file type as a list
-        # TODO change a check method
-        if len(file_list[1]) > 0:
-            file_path = file_list[0]
+
+        if len(file_list[1]) <= 0:
+            return None # File hasn't been choosen 
         
+        file_path = file_list[0]
         self.regression_df = pd.read_csv(file_path, sep = ',')
+        self.build_createModel_button.setEnabled(True)
+        self.build_editdata_button.setEnabled(True)
         
+        # Draw scatters on canvas
+        self.build_canvas.axes.scatter(
+            self.regression_df.section_area,
+            self.regression_df.max_force,
+            color='red', 
+        )
+        self.build_canvas.draw()
+
     def create_regression_model(self):
         '''Initialize creating regression model'''
-        pass
-    
+        model = NewRegressionModel(self.regression_df)
+        model.create_model()
+        self.build_progresbar.setValue(100)
+        accuracy = model.vars['accuracy']
+        equation = model.vars['equation']
+        self.build_accuracy_label.setText(
+            f'Точность данной предсказательной модели: {accuracy}'
+            )
+        self.build_equation_label.setText(
+            f'Уравнение, описывающее зависимость максимально-допустимой нагрузки: {equation}'
+            )
+        
+        self.build_modelName_edit.setEnabled(True)
+        self.build_savemodel_button.setEnabled(True)
+
     def open_edit_window(self):
         '''Open the edit data window'''
         pass

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'new_window.ui'
+# Form implementation generated from reading ui file 'UI's/new_window.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -125,6 +125,10 @@ class Ui_MainWindow(object):
         self.build_createModel_button.setEnabled(False)
         self.build_createModel_button.setObjectName("build_createModel_button")
         self.verticalLayout_3.addWidget(self.build_createModel_button)
+        self.build_editdata_button = QtWidgets.QPushButton(self.build_tab)
+        self.build_editdata_button.setEnabled(False)
+        self.build_editdata_button.setObjectName("build_editdata_button")
+        self.verticalLayout_3.addWidget(self.build_editdata_button)
         self.build_progresbar = QtWidgets.QProgressBar(self.build_tab)
         self.build_progresbar.setEnabled(False)
         self.build_progresbar.setProperty("value", 0)
@@ -142,12 +146,9 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.build_equation_label)
         self.build_modelName_edit = QtWidgets.QLineEdit(self.build_tab)
         self.build_modelName_edit.setEnabled(False)
+        self.build_modelName_edit.setMaxLength(100)
         self.build_modelName_edit.setObjectName("build_modelName_edit")
         self.verticalLayout_3.addWidget(self.build_modelName_edit)
-        self.build_editdata_button = QtWidgets.QPushButton(self.build_tab)
-        self.build_editdata_button.setEnabled(False)
-        self.build_editdata_button.setObjectName("build_editdata_button")
-        self.verticalLayout_3.addWidget(self.build_editdata_button)
         self.build_savemodel_button = QtWidgets.QPushButton(self.build_tab)
         self.build_savemodel_button.setEnabled(False)
         self.build_savemodel_button.setObjectName("build_savemodel_button")
@@ -184,10 +185,10 @@ class Ui_MainWindow(object):
         self.build_about_toolButton.setText(_translate("MainWindow", "Справка"))
         self.build_choosefile_button.setText(_translate("MainWindow", "Выбрать файл с испытаниями для создания предсказательной модели"))
         self.build_createModel_button.setText(_translate("MainWindow", "Создать предсказательную модель"))
+        self.build_editdata_button.setText(_translate("MainWindow", "Редактировать данные для создания модели"))
         self.build_accuracy_label.setText(_translate("MainWindow", "Точность данной предсказательной модели:"))
         self.build_equation_label.setText(_translate("MainWindow", "Уравнение, описывающее зависимость максимально-допустимой нагрузки:"))
         self.build_modelName_edit.setText(_translate("MainWindow", "Название_материала*Процент_заполнения"))
-        self.build_editdata_button.setText(_translate("MainWindow", "Редактировать данные для создания модели"))
         self.build_savemodel_button.setText(_translate("MainWindow", "Сохранить созданную модель в БД под заданым именем "))
         self.main_tabs.setTabText(self.main_tabs.indexOf(self.build_tab), _translate("MainWindow", "Построение предсказательной модели"))
         self.menu.setTitle(_translate("MainWindow", "О программе"))
