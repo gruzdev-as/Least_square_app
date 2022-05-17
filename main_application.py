@@ -84,7 +84,7 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         self.build_editdata_button.clicked.connect(self.open_edit_window)
         self.build_savemodel_button.clicked.connect(self.save_model)
         self.master_comboBox.currentTextChanged.connect(self.fetch_experiment_data)
-        self.master_square_edit.textChanged.connect(self.calculate)
+        self.master_square_edit.textChanged.connect(self.calculate_stress)
         
         
     def about_show(self):
@@ -117,7 +117,7 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         self.regression_df = pd.read_csv(file_path, sep = ',')
         self.build_createModel_button.setEnabled(True)
         self.build_editdata_button.setEnabled(True)
-        
+
         # Draw scatters on canvas
         self.build_canvas.axes.scatter(
             self.regression_df.section_area,
@@ -125,11 +125,12 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
             color='red', 
         )
         self.build_canvas.draw()
-
+   
     def create_regression_model(self):
         '''Initialize creating regression model'''
         model = NewRegressionModel(self.regression_df)
         model.create_model()
+        self.build_progresbar.setEnabled(True)
         self.build_progresbar.setValue(100)
         accuracy = model.vars['accuracy']
         equation = model.vars['equation']
@@ -142,7 +143,31 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         
         self.build_modelName_edit.setEnabled(True)
         self.build_savemodel_button.setEnabled(True)
-
+        
+        
+        ### TODO FIX (It works, but looks weird here)
+        #Draw a regression Line
+        X = model.vars['coefficients']['coef']
+        B = model.vars['coefficients']['intercept']
+        y = []
+        for area in self.regression_df.section_area.unique():
+            predict = X * area + B
+            y.append(predict)
+        self.build_canvas.axes.plot(
+            self.regression_df.section_area.unique(), 
+            y) 
+        ### OR
+        x1= 40
+        x2= 50
+        y1= X*x1+B
+        y2= X*x2+B
+        
+        self.build_canvas.axes.axline(
+            (x1,y1),
+            (x2,y2))
+        
+        self.build_canvas.draw()
+            
     def open_edit_window(self):
         '''Open the edit data window'''
         pass
@@ -151,11 +176,11 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         '''Saving the regression model'''
         pass
     
-    def fetch_experiment_data(self, text):
+    def fetch_experiment_data(self, text):   
         
         self.master_square_edit.setEnabled(True)
         
-        print(text)
+        # TODO fetch choosen data from the dataset
 
-    def calculate(self, text):
+    def calculate_stress(self, text):
         print(text)

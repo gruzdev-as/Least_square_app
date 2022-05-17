@@ -47,7 +47,11 @@ class NewRegressionModel():
         self.vars = {
             'equation': self.equation,
             'model' : self.model,
-            'accuracy': self.accuracy
+            'accuracy': self.accuracy,
+            'coefficients': {
+                'coef' : self.model.coef_[0],
+                'intercept': self.model.intercept_
+            }
         }
         
         
