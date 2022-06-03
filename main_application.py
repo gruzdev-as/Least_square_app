@@ -21,12 +21,12 @@ import main_window_design
 class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
     ''' Class for the main window'''
     
-    def __init__(self):
+    def __init__(self, warning_window):
         
         super().__init__()
         self.setupUi(self) # design init
         
-      
+        self.warning_window = warning_window 
         # Canvas and toolbar setup
         # Master page
         self.master_canvas = MplCanvase()
@@ -164,13 +164,14 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         
         self.build_canvas.axes.axline(
             (x1,y1),
-            (x2,y2))
+            (x2,y2)
+            )
         
         self.build_canvas.draw()
             
     def open_edit_window(self):
         '''Open the edit data window'''
-        pass
+        self.warning_window.show()
     
     def save_model(self):
         '''Saving the regression model'''

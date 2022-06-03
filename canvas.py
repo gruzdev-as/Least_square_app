@@ -18,7 +18,7 @@ class MplCanvase(FigureCanvas):
         fig.subplots_adjust(
             left = 0.08,
             right = 0.98, # 1 - 0.98 = 0.2
-            top = 0.95, # 1 - 0.95 = 0.5
+            top = 0.95, # 1 - 0.95 = 0.05
             bottom = 0.1
             )
 
