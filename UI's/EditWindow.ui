@@ -54,49 +54,14 @@
           <attribute name="horizontalHeaderStretchLastSection">
            <bool>true</bool>
           </attribute>
-          <row>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>2</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>3</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>4</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>5</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>6</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>7</string>
-           </property>
-          </row>
           <column>
            <property name="text">
-            <string>Усилие на разрыв, Н</string>
+            <string>Сечение, мм2</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>Сечение, мм2</string>
+            <string>Усилие на разрыв, Н</string>
            </property>
           </column>
          </widget>

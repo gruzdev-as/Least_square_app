@@ -1,16 +1,17 @@
 ''' 
 Main window file methods
 '''
-
 import pandas as pd
 import time 
 
-from PyQt5 import QtGui, QtWidgets, uic
+from PyQt5 import QtGui, QtWidgets, QtCore
 
 
 from regression import NewRegressionModel
 from canvas import MplCanvase
 from messageBox import MessageBox
+
+from edit_application import EditApplication
 
 from matplotlib.backends.backend_qt5agg import(
     NavigationToolbar2QT as NavigationToolbar,
@@ -21,13 +22,13 @@ import main_window_design
 class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
     ''' Class for the main window'''
     
-    def __init__(self, warning_window):
+    def __init__(self):
         
         super().__init__()
         self.setupUi(self) # design init
         
-        self.warning_window = warning_window 
         # Canvas and toolbar setup
+    
         # Master page
         self.master_canvas = MplCanvase()
         self.master_canvas_lay = QtWidgets.QVBoxLayout(
@@ -52,7 +53,7 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         self.build_toolbar = NavigationToolbar(
             self.build_canvas, 
             self.build_graph_widget
-        )
+            )
         # Add a Canvas obj to a Widget
         self.build_canvas_lay.addWidget(self.build_canvas) 
         # Add a toolbar to a Widget
@@ -63,8 +64,8 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         
         # Vars and variables
         self.regression_df = None
+        self.edit_window = None
 
-        
         # Validators
         self.master_square_edit.setValidator(QtGui.QIntValidator(0, 100))
         
@@ -86,7 +87,6 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         self.master_comboBox.currentTextChanged.connect(self.fetch_experiment_data)
         self.master_square_edit.textChanged.connect(self.calculate_stress)
         
-        
     def about_show(self):
         '''Showing manual how to prepare data for regression'''
 
@@ -101,10 +101,8 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         file_list = QtWidgets.QFileDialog.getOpenFileName(
             self,
             'Выберите файл с данными',
-            # Base Dir
-            '',
-            # File Formats
-            '*.csv'
+            '',# Base Dir
+            '*.csv'# File Formats
         )
         
         # 0 index because getOpenFileName method return 
@@ -119,6 +117,8 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         self.build_editdata_button.setEnabled(True)
 
         # Draw scatters on canvas
+        self.build_canvas.axes.clear()
+        self.build_canvas.axes.grid()
         self.build_canvas.axes.scatter(
             self.regression_df.section_area,
             self.regression_df.max_force,
@@ -171,8 +171,18 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
             
     def open_edit_window(self):
         '''Open the edit data window'''
-        self.warning_window.show()
-    
+        
+        MessageBox(
+            title = 'Подсказка про правильное редактирование данных',
+            text = 'Какая-то переменная или файлик будет хранить этот текст'
+            )
+        
+        self.edit_window = EditApplication(self.regression_df)
+        self.edit_window.setWindowModality(QtCore.Qt.ApplicationModal)
+        self.edit_window.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
+        #TODO return program to the default state       
+        self.edit_window.show()
+
     def save_model(self):
         '''Saving the regression model'''
         pass

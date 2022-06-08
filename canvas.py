@@ -1,5 +1,6 @@
 import matplotlib
 matplotlib.use('QT5Agg') # backend for qt app
+import seaborn as sns 
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import(
@@ -23,3 +24,22 @@ class MplCanvase(FigureCanvas):
             )
 
         super().__init__(fig)
+        
+class SeabornPlot(FigureCanvas):
+    
+    def __init__(self, data):
+        
+        self.g = sns.FacetGrid(
+            data, 
+            col='section_area',
+            sharey='col',
+            sharex='col',
+        )
+        self.fig = self.g.fig
+        self.g.map(sns.boxplot, 'section_area', 'max_force', order=None)
+        super().__init__(self.g.fig)
+        
+         
+        
+    
+    
