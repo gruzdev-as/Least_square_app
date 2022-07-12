@@ -21,10 +21,7 @@ class EditApplication(QtWidgets.QMainWindow, edit_window_design.Ui_MainWindow):
         ### Dataframe 
         self.df = df 
         self.original_df = self.df.copy().reset_index(drop=True)
-
-        ### Validator
-        #self.edit_table.setValidator(QtGui.QIntValidator(0, 1000))
-        
+      
         ### Canvases settings 
         # Boxplot
         self.boxplot_canvas = SeabornPlot(self.df)
@@ -92,7 +89,14 @@ class EditApplication(QtWidgets.QMainWindow, edit_window_design.Ui_MainWindow):
     def change_cell(self, row, column): 
         '''Is emitted whenever the data has changed'''
 
-        self.df.iloc[row, column] = int(self.edit_table.item(row, column).text())
+        new_item = self.edit_table.item(row, column).text()
+        if len(new_item) > 0: 
+            self.df.iloc[row, column] = int(self.edit_table.item(row, column).text())
+        else: 
+            self.df.iloc[row, column] = None
+            
+        #it's create an infinite loop 
+        self.edit_table.item(row, column).setBackground(QtGui.QColor('Yellow'))
         self.redraw()
 
     def reset_df(self):
@@ -107,7 +111,7 @@ class EditApplication(QtWidgets.QMainWindow, edit_window_design.Ui_MainWindow):
                     )
    
     def redraw(self):
-
+        
         self.scatter_canvas.axes.clear()
         self.scatter_canvas.axes.grid()  
         self.scatter_canvas.axes.scatter(
@@ -117,17 +121,17 @@ class EditApplication(QtWidgets.QMainWindow, edit_window_design.Ui_MainWindow):
         )
         self.scatter_canvas.draw()
 
-        self.boxplot_canvas_lay.removeWidget(self.boxplot_canvas)
-        sip.delete(self.boxplot_canvas)
-        self.boxplot_canvas_lay.removeWidget(self.master_toolbar)
-        sip.delete(self.master_toolbar)
-        self.boxplot_canvas = SeabornPlot(self.df)
-        self.boxplot_canvas_lay.addWidget(self.boxplot_canvas)
-        self.master_toolbar = NavigationToolbar(
-            self.boxplot_canvas, 
-            self.edit_boxplotgraph_widget
-            )
-        self.boxplot_canvas_lay.addWidget(self.master_toolbar)
+        #self.boxplot_canvas_lay.removeWidget(self.boxplot_canvas)
+        #sip.delete(self.boxplot_canvas)
+        #self.boxplot_canvas_lay.removeWidget(self.master_toolbar)
+        #sip.delete(self.master_toolbar)
+        #self.boxplot_canvas = SeabornPlot(self.df)
+        #self.boxplot_canvas_lay.addWidget(self.boxplot_canvas)
+        #self.master_toolbar = NavigationToolbar(
+        #    self.boxplot_canvas, 
+        #    self.edit_boxplotgraph_widget
+        #    )
+        #self.boxplot_canvas_lay.addWidget(self.master_toolbar)
         
         for section_area, data in self.df.groupby('section_area'):
             data = data.drop('section_area', axis=1)
