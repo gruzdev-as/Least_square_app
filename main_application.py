@@ -3,7 +3,7 @@ Main window file methods
 '''
 import pandas as pd
 import time 
-
+from random import choices
 from PyQt5 import QtGui, QtWidgets, QtCore
 
 
@@ -69,12 +69,10 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         # Validators
         self.master_square_edit.setValidator(QtGui.QIntValidator(0, 100))
         
-        # TODO items from the database
-        list1 = [
-            'First Item',
-            'Second Item',
-            'Third Item',
-        ]
+       # Database
+        self.database = pd.read_csv('..\\data\\database.csv', sep=';', decimal=',')
+        
+        list1 = self.database.name.value_counts().index.to_list()
         self.master_comboBox.clear()
         self.master_comboBox.addItems(list1)
         
@@ -128,12 +126,12 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
    
     def create_regression_model(self):
         '''Initialize creating regression model'''
-        model = NewRegressionModel(self.regression_df)
-        model.create_model()
+        self.model = NewRegressionModel(self.regression_df)
+        self.model.create_model()
         self.build_progresbar.setEnabled(True)
         self.build_progresbar.setValue(100)
-        accuracy = model.vars['accuracy']
-        equation = model.vars['equation']
+        accuracy = self.model.vars['accuracy']
+        equation = self.model.vars['equation']
         self.build_accuracy_label.setText(
             f'Точность данной предсказательной модели: {accuracy}'
             )
@@ -144,11 +142,9 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         self.build_modelName_edit.setEnabled(True)
         self.build_savemodel_button.setEnabled(True)
         
-        
-        ### TODO FIX (It works, but looks weird here)
         #Draw a regression Line
-        X = model.vars['coefficients']['coef']
-        B = model.vars['coefficients']['intercept']
+        X = self.model.vars['coefficients']['coef']
+        B = self.model.vars['coefficients']['intercept']
         y = []
         for area in self.regression_df.section_area.unique():
             predict = X * area + B
@@ -157,10 +153,8 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
             self.regression_df.section_area.unique(), 
             y) 
         ### OR
-        x1= 40
-        x2= 50
-        y1= X*x1+B
-        y2= X*x2+B
+        x1, x2 = choices(self.regression_df.section_area.value_counts().index, k=2)
+        y1, y2 = X*x1+B, X*x2+B
         
         self.build_canvas.axes.axline(
             (x1,y1),
@@ -179,19 +173,51 @@ class MainApplication(QtWidgets.QMainWindow, main_window_design.Ui_MainWindow):
         
         self.edit_window = EditApplication(self.regression_df)
         self.edit_window.setWindowModality(QtCore.Qt.ApplicationModal)
-        self.edit_window.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
-        #TODO return program to the default state       
+        self.edit_window.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)   
         self.edit_window.show()
 
     def save_model(self):
-        '''Saving the regression model'''
-        pass
+        size = len(self.regression_df.max_force.to_numpy())
+        new_df = pd.DataFrame({
+           'name' : [self.build_modelName_edit.text()] * size,
+           'max_force': self.regression_df.max_force.to_numpy(),
+           'section_area': self.regression_df.section_area.to_numpy(),
+           'accuracy': [self.model.vars['accuracy']] * size,
+           'intercept' : [self.model.vars['coefficients']['intercept']] * size,
+           'coef' : [self.model.vars['coefficients']['coef']] * size,
+        })
+
+        self.database = pd.concat([self.database, new_df], ignore_index=True)
+        self.database.to_csv('..\\data\\database_new.csv', index=True)
+
+        MessageBox(
+            title = 'Сохранение',
+            text = 'Успешно сохранено!'
+            )
+
+        self.build_modelName_edit.setEnabled(False)
+        self.build_savemodel_button.setEnabled(False)
     
     def fetch_experiment_data(self, text):   
         
+        self.master_canvas.axes.clear()
+        self.master_canvas.axes.grid()
         self.master_square_edit.setEnabled(True)
-        
-        # TODO fetch choosen data from the dataset
+        self.coef = self.database[self.database.name == text].coef.to_numpy()[0]
+        self.intercept = self.database[self.database.name == text].intercept.to_numpy()[0]
+        accuracy = self.database[self.database.name == text].accuracy.to_numpy()[0]
+        self.master_equation_label.setText(f'Max Force = {self.coef} * Section Area + {self.intercept}')
+        self.master_label_accuracy.setText(f'{accuracy}')
+
+        self.master_canvas.axes.scatter(
+            self.database[self.database.name == text].section_area.to_numpy(),
+            self.database[self.database.name == text].max_force.to_numpy(),
+            color='red', 
+        )
+        self.master_canvas.draw()
+        print(self.coef, self.intercept)
 
     def calculate_stress(self, text):
-        print(text)
+        
+        self.master_maxForce_label.setText(f'Расчитанная максимально-допустимая нагрузка при центральном растяжении для данного сечения соответственно равна: {self.coef*int(text) + self.intercept} Н')
+        self.master_recForce_label.setText(f'Рекомендованное статическое нагружение данного сечения не более: {(self.coef*int(text) + self.intercept)*0.8} Н')

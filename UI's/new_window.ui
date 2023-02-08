@@ -157,7 +157,7 @@
         <item>
          <widget class="QLabel" name="master_equation_label">
           <property name="text">
-           <string>TextLabel</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -171,7 +171,7 @@
         <item>
          <widget class="QLabel" name="master_label_accuracy">
           <property name="text">
-           <string>TextLabel</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -236,7 +236,7 @@
            <bool>false</bool>
           </property>
           <property name="text">
-           <string>Редактировать данные для создания модели</string>
+           <string>Просмотреть данные, используемые для создания модели</string>
           </property>
          </widget>
         </item>
@@ -309,7 +309,7 @@
      <x>0</x>
      <y>0</y>
      <width>1218</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

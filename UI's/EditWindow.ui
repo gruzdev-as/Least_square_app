@@ -42,11 +42,11 @@
           <attribute name="horizontalHeaderCascadingSectionResizes">
            <bool>false</bool>
           </attribute>
-          <attribute name="horizontalHeaderMinimumSectionSize">
-           <number>100</number>
-          </attribute>
           <attribute name="horizontalHeaderDefaultSectionSize">
            <number>200</number>
+          </attribute>
+          <attribute name="horizontalHeaderMinimumSectionSize">
+           <number>100</number>
           </attribute>
           <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
            <bool>false</bool>
@@ -64,13 +64,6 @@
             <string>Усилие на разрыв, Н</string>
            </property>
           </column>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="edit_cancelEdit_button">
-          <property name="text">
-           <string>Отменить изменения в таблице</string>
-          </property>
          </widget>
         </item>
        </layout>
@@ -100,16 +93,9 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QPushButton" name="edit_save_button">
-        <property name="text">
-         <string>Сохранить изменения в файле анализа</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="edit_close_button">
         <property name="text">
-         <string>Выйти без сохранения</string>
+         <string>Выйти</string>
         </property>
        </widget>
       </item>

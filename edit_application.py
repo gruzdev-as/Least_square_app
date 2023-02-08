@@ -2,7 +2,6 @@
 File for edit the data
 '''
 
-import sip 
 from PyQt5 import QtWidgets, QtGui
 from canvas import MplCanvase, SeabornPlot
 from matplotlib.backends.backend_qt5agg import(
@@ -72,8 +71,6 @@ class EditApplication(QtWidgets.QMainWindow, edit_window_design.Ui_MainWindow):
 
         ### Events
         self.edit_table.cellChanged.connect(self.change_cell)
-        self.edit_cancelEdit_button.clicked.connect(self.reset_df)
-        self.edit_save_button.clicked.connect(self.save)
         self.edit_close_button.clicked.connect(self.close)
         
     def save(self):
@@ -94,10 +91,6 @@ class EditApplication(QtWidgets.QMainWindow, edit_window_design.Ui_MainWindow):
             self.df.iloc[row, column] = int(self.edit_table.item(row, column).text())
         else: 
             self.df.iloc[row, column] = None
-            
-        #it's create an infinite loop 
-        self.edit_table.item(row, column).setBackground(QtGui.QColor('Yellow'))
-        self.redraw()
 
     def reset_df(self):
         self.df = self.original_df
@@ -109,38 +102,6 @@ class EditApplication(QtWidgets.QMainWindow, edit_window_design.Ui_MainWindow):
                 self.edit_table.setItem(
                     i, j, QtWidgets.QTableWidgetItem(str(row[j]))
                     )
-   
-    def redraw(self):
-        
-        self.scatter_canvas.axes.clear()
-        self.scatter_canvas.axes.grid()  
-        self.scatter_canvas.axes.scatter(
-            self.df.section_area,
-            self.df.max_force,
-            color='red', 
-        )
-        self.scatter_canvas.draw()
-
-        #self.boxplot_canvas_lay.removeWidget(self.boxplot_canvas)
-        #sip.delete(self.boxplot_canvas)
-        #self.boxplot_canvas_lay.removeWidget(self.master_toolbar)
-        #sip.delete(self.master_toolbar)
-        #self.boxplot_canvas = SeabornPlot(self.df)
-        #self.boxplot_canvas_lay.addWidget(self.boxplot_canvas)
-        #self.master_toolbar = NavigationToolbar(
-        #    self.boxplot_canvas, 
-        #    self.edit_boxplotgraph_widget
-        #    )
-        #self.boxplot_canvas_lay.addWidget(self.master_toolbar)
-        
-        for section_area, data in self.df.groupby('section_area'):
-            data = data.drop('section_area', axis=1)
-            stats = boxplot_stats(data)
-            stats = stats.pop()['fliers']
-            for values in stats:
-                index = self.df.loc[self.df['max_force'] == values].index[0] 
-                self.edit_table.item(index, 1).setBackground(QtGui.QColor('red'))
-
         
         
     
